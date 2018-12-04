@@ -33,3 +33,7 @@ acido(M) :- (ligacaodupla(M, C, O), ligacaosimples(M, C, O1), ligacaosimples(M, 
 aldeido(M) :- (ligacaosimples(M, C, C1), ligacaosimples(M, C1, H), ligacaodupla(M, C1, O)), (atomo(M, C, carbono), atomo(M, C1, carbono), atomo(M, O, oxigenio), atomo(M, H, hidrogenio)), C\=C1, !.
 
 cetona(M) :- (ligacaosimples(M, C, C1), ligacaodupla(M, C1, O), ligacaosimples(M, C1, C2)), (atomo(M, C, carbono), atomo(M, C1, carbono), atomo(M, C2, carbono), atomo(M, O, oxigenio)), C\=C2, !.
+
+amina(M) :- (ligacaosimples(M, C, N), ligacaosimples(M, N, H1), ligacaosimples(M, N, H2), H1\=H2, atomo(M,C, carbono), atomo(M, N, nitrogenio), atomo(M, H1, hidrogenio), atomo(M, H1, hidrogenio)); 
+    (ligacaosimples(M, C, N), ligacaosimples(M, N, C1), ligacaosimples(M, N, H), C\=C1, atomo(M,C, carbono), atomo(M, N, nitrogenio), atomo(M, H, hidrogenio), atomo(M, C1, carbono));
+    (ligacaosimples(M, C, N), ligacaosimples(M, N, C1), ligacaosimples(M, N, C2), C\=C1, C\=C2, C1\=C2, atomo(M, C, carbono), atomo(M, N, nitrogenio), atomo(M, C1, carbono), atomo(M, C2, carbono)).
