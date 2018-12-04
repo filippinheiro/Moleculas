@@ -3,15 +3,22 @@
 %%Acetona
 %átomos
 atomo(m1, c1, carbono).
-atomo(m1, n1, nitrogenio).
 atomo(m1, c2, carbono).
-atomo(m1, c3, carbono).
+atomo(m1, h1, hidrogenio).
+atomo(m1, h2, hidrogenio).
+atomo(m1, o1, oxigenio).
+atomo(m1, o2, oxigenio).
+atomo(m1, o3, oxigenio).
+
 
 %ligações
-ligacaosimples(m1, c1, n1).
-ligacaosimples(m1, n1, c2).
-ligacaosimples(m1, n1, c3).
-ligacaodupla(m1, aa, aa).
+ligacaosimples(m1, c1, o1).
+ligacaosimples(m1, o1, h1).
+ligacaosimples(m1, c2, o3).
+ligacaosimples(m1, o3, h2).
+
+ligacaodupla(m1, c1, o2).
+
 
 %idMolecula(M) :- acido(M).
 
@@ -81,9 +88,13 @@ amina(M) :- ligacaoS(M, C, N),
      atomo(M, C2, carbono), !.
 
 
-alcool(M) :- ligacaoS(M, C, O), 
+alcool(M) :- 
+    ligacaoS(M, C, O), 
     ligacaoS(M, O, H),
-    not(ligacaoD(M, C, O)),
+    not(ligacaoD(M, C, X)),
     atomo(M, C, carbono),
     atomo(M, O, oxigenio),
-    atomo(M, H, hidrogenio).
+    atomo(M, H, hidrogenio),
+    atomo(M, X, oxigenio),
+    X\=O, 
+    !. 
