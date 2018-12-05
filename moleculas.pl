@@ -1,37 +1,41 @@
 %%prolog
-
-%%Acetona
-%átomos
-atomo(m1, c1, carbono).
-atomo(m1, c2, carbono).
-atomo(m1, h1, hidrogenio).
-atomo(m1, h2, hidrogenio).
-atomo(m1, o1, oxigenio).
-atomo(m1, o2, oxigenio).
-atomo(m1, o3, oxigenio).
+:- dynamic ligacaodupla/3.
+:- dynamic ligacaosimples/3.
+:- dynamic ligacaotripla/3.
+:- dynamic atomo/3.
 
 
-%ligações
-ligacaosimples(m1, c1, o1).
-ligacaosimples(m1, o1, h1).
-ligacaosimples(m1, c2, o3).
-ligacaosimples(m1, o3, h2).
-
-ligacaodupla(m1, c1, o2).
+                    %átomos
+%%Coloque os átomos todos aqui
 
 
-%idMolecula(M) :- acido(M).
+                    %ligações
+
+%%Coloque as ligações simples aqui (Se houver)
 
 
+%%Duplas aqui (Se houver)
+
+
+
+%%Triplas aqui (Se houver)
+
+
+
+%Predicados
 ligacaoS(M, A1, A2) :-
     ligacaosimples(M, A1, A2).
 ligacaoS(M, A1, A2) :-
     ligacaosimples(M, A2, A1).
-
 ligacaoD(M, A1, A2) :-
     ligacaodupla(M, A1, A2).
 ligacaoD(M, A1, A2) :-
     ligacaodupla(M, A2, A1).
+ligacaoT(M, A1, A2) :-
+    ligacaotripla(M, A1, A2).
+ligacaoT(M, A1, A2) :-
+    ligacaotripla(M, A2, A1).
+
 
 acido(M) :- ligacaoD(M, C, O), 
     ligacaoS(M, C, O1), 
@@ -98,3 +102,56 @@ alcool(M) :-
     atomo(M, X, oxigenio),
     X\=O, 
     !. 
+
+haleto(M) :-
+    (ligacaoS(M, _, F);
+    ligacaoD(M, _, F);
+    ligacaoT(M, _, F);
+    ligacaoS(M, _, C);
+    ligacaoD(M, _, C);
+    ligacaoT(M, _, C);
+    ligacaoS(M, _, B);
+    ligacaoD(M, _, B);
+    ligacaoT(M, _, B);
+    ligacaoS(M, _, I);
+    ligacaoD(M, _, I);
+    ligacaoT(M, _, I)),
+    (atomo(M, F, fluor);
+    atomo(M, C, cloro);
+    atomo(M, B, bromo);
+    atomo(M, I, iodo)), !.
+
+identifica(M) :-
+    (acido(M), writeln("Primário: Ácido Carboxílico, sufixo oico")),
+    ((aldeido(M), writeln("Secundário: aldeido"));
+    (cetona(M), writeln("Secundário: cetona"));
+    (amina(M), writeln("Secundário: amina"));
+    (alcool(M), writeln("Secundário: álcool"));
+    (haleto(M), writeln("Secundário: haleto"))), fail.
+identifica(M) :-
+    (aldeido(M), not(acido(M)), writeln("Primário: Aldeido, sulfixo al")),
+    ((cetona(M), writeln("Secundário: cetona"));
+    (amina(M), writeln("Secundário: amina"));
+    (alcool(M), writeln("Secundário: álcool"));
+    (haleto(M), writeln("Secundário: haleto"))), fail.
+identifica(M) :-
+    (cetona(M),not(acido(M)), not(aldeido(M)), writeln("Primário: Cetona, sufixo ona")), 
+    ((amina(M),  writeln("Secundário: amina"));
+    (alcool(M), writeln("Secundário: álcool"));
+    (haleto(M), writeln("Secundário: haleto"))), fail.
+identifica(M) :-
+    (amina(M), not(cetona(M)), not(aldeido(M)), not(acido(M)), writeln("Primário: Amina, sufixo amina")),
+    ((alcool(M), writeln("Secundário: alcool"));
+    (haleto(M), writeln("Secundário: haleto"))), fail.
+identifica(M) :-
+    (alcool(M), not(acido(M)), not(aldeido(M)), not(cetona(M)), not(amina(M)), writeln("Primário: Alcool, sufixo ol")),
+    (haleto(M), writeln("Secundário: haleto")), fail.
+identifica(M) :-
+    haleto(M), not(acido(M)), not(aldeido(M)), not(cetona(M)), not(amina(M)), not(alcool(M)), writeln("Primário: Haleto, sufixo eto"), fail.
+identifica(M) :-
+    not(acido(M)),
+    not(aldeido(M)),
+    not(cetona(M)),
+    not(amina(M)),
+    not(alcool(M)),
+    not(haleto(M)), writeln("Não apresenta nenhuma dessas funções"), fail.
